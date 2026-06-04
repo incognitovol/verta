@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>VERTA Sensor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  :root{--accent:#2fe0b0;--blue:#46a6ff;}
+  html,body{height:100%;}
+  body{
+    font-family:'IBM Plex Sans',sans-serif;color:#e8f0f6;
+    background:radial-gradient(900px 500px at 50% 0%,rgba(47,224,176,.08),transparent 60%),#0a0f14;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:28px;text-align:center;min-height:100vh;
+  }
+  .role{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#7e93a4;margin-bottom:10px;}
+  .ring{
+    width:150px;height:150px;border-radius:50%;display:grid;place-items:center;margin:8px 0 22px;
+    border:2px solid #21303d;position:relative;transition:.4s;
+  }
+  .ring.live{border-color:var(--accent);box-shadow:0 0 40px rgba(47,224,176,.35);}
+  .ring .big{font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:500;}
+  .ring .small{font-size:11px;color:#7e93a4;letter-spacing:.1em;text-transform:uppercase;margin-top:2px;}
+  h1{font-size:20px;font-weight:700;margin-bottom:6px;}
+  p{font-size:14px;color:#7e93a4;line-height:1.6;max-width:320px;margin-bottom:22px;}
+  button{
+    font-family:inherit;font-weight:600;font-size:15px;border:none;border-radius:12px;
+    padding:15px 26px;background:var(--accent);color:#04130d;cursor:pointer;
+    box-shadow:0 0 24px rgba(47,224,176,.3);
+  }
+  button:active{transform:scale(.97);}
+  .status{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#56697a;margin-top:18px;}
+  .pulse{animation:p 1.6s infinite;}
+  @keyframes p{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+</head>
+<body>
+  <div class="role" id="roleLabel">SENSOR</div>
+  <div class="ring" id="ring">
+    <div>
+      <div class="big" id="rate">--</div>
+      <div class="small">Hz</div>
+    </div>
+  </div>
+  <h1 id="title">Tap to start</h1>
+  <p id="desc">This phone will measure your movement and send it to the dashboard.</p>
+  <button id="startBtn">Start Sensor</button>
+  <div class="status" id="status">Not connected</div>
+
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var role = params.get('role') || 'back';
+  var labels = { back:'Lower-Back Sensor', thigh:'Thigh Sensor' };
+  document.getElementById('roleLabel').textContent = role.toUpperCase();
+  document.getElementById('title').textContent = labels[role] || 'Sensor';
+
+  var ws=null, connected=false, sending=false;
+  var latest = { beta:0, gamma:0, alpha:0, ax:0, ay:0, az:0 };
+  var pktCount=0;
+
+  var ring=document.getElementById('ring'),
+      statusEl=document.getElementById('status'),
+      rateEl=document.getElementById('rate'),
+      btn=document.getElementById('startBtn');
+
+  function connectWS(){
+    var proto = location.protocol === 'https:' ? 'wss://' : 'ws://';
+    ws = new WebSocket(proto + location.host);
+    ws.onopen = function(){
+      connected=true;
+      statusEl.textContent='Connected — streaming';
+      statusEl.classList.add('pulse');
+      ring.classList.add('live');
+    };
+    ws.onclose = function(){
+      connected=false; ring.classList.remove('live');
+      statusEl.textContent='Reconnecting…';
+      setTimeout(connectWS, 1500);
+    };
+    ws.onerror = function(){ try{ws.close();}catch(e){} };
+  }
+
+  function onOrient(e){
+    if(e.beta==null) return;
+    latest.beta=e.beta; latest.gamma=e.gamma; latest.alpha=e.alpha||0;
+  }
+  function onMotion(e){
+    var a=e.accelerationIncludingGravity;
+    if(a && a.x!=null){ latest.ax=a.x; latest.ay=a.y; latest.az=a.z; }
+  }
+
+  // send at ~30 packets/sec
+  function loop(){
+    if(connected && sending && ws && ws.readyState===1){
+      ws.send(JSON.stringify({
+        type:'data', role:role,
+        beta:latest.beta, gamma:latest.gamma, alpha:latest.alpha,
+        ax:latest.ax, ay:latest.ay, az:latest.az, t:Date.now()
+      }));
+      pktCount++;
+    }
+  }
+  setInterval(loop, 33);
+  setInterval(function(){ rateEl.textContent = pktCount; pktCount=0; }, 1000);
+
+  btn.addEventListener('click', function(){
+    var needO = (typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function');
+    var needM = (typeof DeviceMotionEvent!=='undefined' && typeof DeviceMotionEvent.requestPermission==='function');
+    var p = Promise.resolve('granted');
+    if(needO) p = DeviceOrientationEvent.requestPermission();
+    p.then(function(r){
+      if(r!=='granted' && r!==undefined) throw new Error('denied');
+      if(needM) return DeviceMotionEvent.requestPermission();
+    }).then(function(){
+      window.addEventListener('deviceorientation', onOrient, true);
+      window.addEventListener('devicemotion', onMotion, true);
+      sending=true;
+      connectWS();
+      btn.style.display='none';
+      document.getElementById('desc').textContent='Keep this phone strapped in place. You can lock the screen-rotation but leave the screen on.';
+    }).catch(function(){
+      statusEl.textContent='Permission denied — must open over https on your phone';
+    });
+    if(!needO && !needM){
+      window.addEventListener('deviceorientation', onOrient, true);
+      window.addEventListener('devicemotion', onMotion, true);
+      sending=true; connectWS(); btn.style.display='none';
+    }
+  });
+})();
+</script>
+</body>
+</html>
