@@ -418,31 +418,31 @@
 
     // pelvis (base, stays upright)
     var pelvis=new THREE.Group(); pelvis.position.y=0; figure.add(pelvis);
-    var hipBar=bone(0.34,0.05,boneMat); hipBar.rotation.z=Math.PI/2; hipBar.position.set(0.17,0,0); pelvis.add(hipBar);
-    pelvis.add(joint(0.07,jointMat)); // hip center
+    var hipBar=bone(0.26,0.045,boneMat); hipBar.rotation.z=Math.PI/2; hipBar.position.set(0.13,0,0); pelvis.add(hipBar);
+    pelvis.add(joint(0.06,jointMat)); // hip center
 
-    // trunk pivot (leans)
+    // trunk pivot (leans). Torso is SHORTER than legs (realistic).
     trunkPivot=new THREE.Group(); trunkPivot.position.set(0,0,0); pelvis.add(trunkPivot);
-    var spineG=new THREE.CylinderGeometry(0.045,0.05,0.62,14); spineG.translate(0,0.31,0);
+    var spineG=new THREE.CylinderGeometry(0.04,0.05,0.50,14); spineG.translate(0,0.25,0);
     var spineMesh=new THREE.Mesh(spineG,boneMat); trunkPivot.add(spineMesh);
-    // shoulders
-    var shoulders=new THREE.Group(); shoulders.position.y=0.62; trunkPivot.add(shoulders);
-    var shBar=new THREE.CylinderGeometry(0.045,0.045,0.42,14); shBar.rotateZ(Math.PI/2);
+    // shoulders (narrower)
+    var shoulders=new THREE.Group(); shoulders.position.y=0.50; trunkPivot.add(shoulders);
+    var shBar=new THREE.CylinderGeometry(0.04,0.04,0.34,14); shBar.rotateZ(Math.PI/2);
     shoulders.add(new THREE.Mesh(shBar,boneMat));
-    shoulders.add(jointAt(jointMat,-0.21,0,0)); shoulders.add(jointAt(jointMat,0.21,0,0));
-    // head
-    var neck=new THREE.CylinderGeometry(0.03,0.03,0.12,10); neck.translate(0,0.06,0);
-    var neckM=new THREE.Mesh(neck,boneMat); neckM.position.y=0.62; trunkPivot.add(neckM);
-    var head=joint(0.13,headMat); head.position.y=0.83; trunkPivot.add(head);
-    // arms
-    armR=limb(0.21,0,boneMat,jointMat,shoulders,0.32,0.28);
-    armL=limb(-0.21,0,boneMat,jointMat,shoulders,0.32,0.28);
+    shoulders.add(jointAt(jointMat,-0.17,0,0)); shoulders.add(jointAt(jointMat,0.17,0,0));
+    // head (smaller)
+    var neck=new THREE.CylinderGeometry(0.028,0.028,0.09,10); neck.translate(0,0.045,0);
+    var neckM=new THREE.Mesh(neck,boneMat); neckM.position.y=0.50; trunkPivot.add(neckM);
+    var head=joint(0.10,headMat); head.position.y=0.68; trunkPivot.add(head);
+    // arms (shorter, hang to ~hip level)
+    armR=limb(0.17,0,boneMat,jointMat,shoulders,0.25,0.23);
+    armL=limb(-0.17,0,boneMat,jointMat,shoulders,0.25,0.23);
 
-    // legs (children of pelvis -> independent of trunk lean)
-    var legR=limb(0.13,0,boneMat,jointMat,pelvis,0.5,0.5); thighR=legR.upper; shinR=legR.lower;
-    var legL=limb(-0.13,0,boneMat,jointMat,pelvis,0.5,0.5); thighL=legL.upper; shinL=legL.lower;
+    // legs (children of pelvis -> independent of trunk lean). Longer than torso.
+    var legR=limb(0.12,0,boneMat,jointMat,pelvis,0.48,0.46); thighR=legR.upper; shinR=legR.lower;
+    var legL=limb(-0.12,0,boneMat,jointMat,pelvis,0.48,0.46); thighL=legL.upper; shinL=legL.lower;
 
-    figure.position.y=0.25;
+    figure.position.y=0.30;
 
     sceneEl.addEventListener('pointerdown',function(e){dragging=true;lastX=e.clientX;autoRot=false;});
     window.addEventListener('pointerup',function(){dragging=false;});
@@ -471,37 +471,39 @@
     camera.aspect=W/H; camera.updateProjectionMatrix(); renderer.setSize(W,H);
   }
 
-  var phase=0;
+  var phase=0, legSmooth=0;
   function updateFigure(){
     if(!figure) return;
-    // trunk lean: forward = rotate about X, side = rotate about Z
+    // trunk lean: 1:1 with real angle (no exaggeration) — forward about X, side about Z
     var rf=THREE.MathUtils.degToRad(Math.max(-50,Math.min(50,fwd)));
     var rl=THREE.MathUtils.degToRad(Math.max(-40,Math.min(40,lat)));
     trunkPivot.rotation.x = rf;
     trunkPivot.rotation.z = -rl;
 
-    // walking phase advances with cadence (or demo)
-    var spd = (cadence>0?cadence:(demo?104:0))/60; // steps/sec
-    phase += 0.016 * spd * Math.PI;
-
-    // instrumented leg (right) driven by REAL thigh angle when present; else modeled
-    var rightAng;
+    var rightAng, leftAng;
     if(thigh.present && !demo && calibrated){
-      rightAng = THREE.MathUtils.degToRad(Math.max(-45,Math.min(45,thighAng)));
+      // REAL leg drives everything → other leg + arms are locked anti-phase so they never drift
+      var target = THREE.MathUtils.degToRad(Math.max(-45,Math.min(45,thighAng)));
+      legSmooth += (target-legSmooth)*0.25;   // gentle low-pass to kill jitter
+      rightAng = legSmooth;
+      leftAng  = -legSmooth;                  // mirror of the real leg = always in step
     } else {
-      rightAng = Math.sin(phase)*0.5;
+      // demo / no thigh sensor: model both legs from one walking clock
+      var spd=(cadence>0?cadence:(demo?104:0))/60;
+      phase += 0.016*spd*Math.PI;
+      rightAng = Math.sin(phase)*0.45;
+      leftAng  = -Math.sin(phase)*0.45;
     }
-    var leftAng = -Math.sin(phase)*0.5; // opposite leg modeled
 
     thighR.rotation.x = rightAng;
     thighL.rotation.x = leftAng;
-    // knees bend on swing-forward
-    shinR.rotation.x = Math.max(0, -rightAng*0.9 + 0.15);
-    shinL.rotation.x = Math.max(0, -leftAng*0.9 + 0.15);
-    // arms swing opposite to legs
+    // knee bends as that leg swings forward
+    shinR.rotation.x = Math.max(0, rightAng*0.8 + 0.1);
+    shinL.rotation.x = Math.max(0, leftAng*0.8 + 0.1);
+    // arms swing opposite their same-side leg, smaller amplitude (less exaggerated)
     if(armR&&armL){
-      armR.upper.rotation.x = leftAng*0.7;
-      armL.upper.rotation.x = rightAng*0.7;
+      armR.upper.rotation.x = -rightAng*0.45;
+      armL.upper.rotation.x = -leftAng*0.45;
     }
   }
 
