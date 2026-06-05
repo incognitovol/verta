@@ -58,14 +58,24 @@
   document.getElementById('roleLabel').textContent = role.toUpperCase();
   document.getElementById('title').textContent = labels[role] || 'Sensor';
 
-  var ws=null, connected=false, sending=false;
+  var ws=null, connected=false, sending=false, intentional=false, state='idle';
   var latest = { beta:0, gamma:0, alpha:0, ax:0, ay:0, az:0 };
-  var pktCount=0;
+  var pktCount=0, wakeLock=null;
 
   var ring=document.getElementById('ring'),
       statusEl=document.getElementById('status'),
       rateEl=document.getElementById('rate'),
       btn=document.getElementById('startBtn');
+
+  // keep the screen awake so the phone doesn't auto-lock and kill the stream
+  function reqWake(){ try{ if('wakeLock' in navigator){ navigator.wakeLock.request('screen').then(function(w){ wakeLock=w; }).catch(function(){}); } }catch(e){} }
+  function relWake(){ try{ if(wakeLock){ wakeLock.release(); wakeLock=null; } }catch(e){} }
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState==='visible' && state==='live'){
+      reqWake();
+      if(!connected){ try{ if(ws) ws.close(); }catch(e){} connectWS(); }
+    }
+  });
 
   function connectWS(){
     var proto = location.protocol === 'https:' ? 'wss://' : 'ws://';
@@ -77,9 +87,9 @@
       ring.classList.add('live');
     };
     ws.onclose = function(){
-      connected=false; ring.classList.remove('live');
-      statusEl.textContent='Reconnecting…';
-      setTimeout(connectWS, 1500);
+      connected=false; ring.classList.remove('live'); statusEl.classList.remove('pulse');
+      if(intentional){ statusEl.textContent='Disconnected'; }
+      else { statusEl.textContent='Reconnecting…'; setTimeout(connectWS, 1500); }
     };
     ws.onerror = function(){ try{ws.close();}catch(e){} };
   }
@@ -107,7 +117,25 @@
   setInterval(loop, 33);
   setInterval(function(){ rateEl.textContent = pktCount; pktCount=0; }, 1000);
 
+  function goLive(){
+    intentional=false; sending=true; state='live';
+    connectWS(); reqWake();
+    btn.textContent='Disconnect';
+    btn.style.background='var(--danger,#ff5c7a)'; btn.style.color='#fff'; btn.style.boxShadow='none';
+    document.getElementById('desc').textContent='Streaming. Screen will stay awake on its own — leave the phone strapped in place. Tap Disconnect when you\u2019re done.';
+  }
+  function goPaused(){
+    intentional=true; sending=false; state='paused';
+    relWake(); try{ if(ws) ws.close(); }catch(e){}
+    btn.textContent='Reconnect';
+    btn.style.background=''; btn.style.color=''; btn.style.boxShadow='';
+    document.getElementById('desc').textContent='Disconnected. Tap Reconnect to resume streaming.';
+  }
+
   btn.addEventListener('click', function(){
+    if(state==='live'){ goPaused(); return; }
+    if(state==='paused'){ goLive(); return; }
+    // first time: request motion permission (must be from this tap)
     var needO = (typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function');
     var needM = (typeof DeviceMotionEvent!=='undefined' && typeof DeviceMotionEvent.requestPermission==='function');
     var p = Promise.resolve('granted');
@@ -118,17 +146,14 @@
     }).then(function(){
       window.addEventListener('deviceorientation', onOrient, true);
       window.addEventListener('devicemotion', onMotion, true);
-      sending=true;
-      connectWS();
-      btn.style.display='none';
-      document.getElementById('desc').textContent='Keep this phone strapped in place. You can lock the screen-rotation but leave the screen on.';
+      goLive();
     }).catch(function(){
       statusEl.textContent='Permission denied — must open over https on your phone';
     });
     if(!needO && !needM){
       window.addEventListener('deviceorientation', onOrient, true);
       window.addEventListener('devicemotion', onMotion, true);
-      sending=true; connectWS(); btn.style.display='none';
+      goLive();
     }
   });
 })();
