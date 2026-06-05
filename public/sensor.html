@@ -53,8 +53,8 @@
 <script>
 (function(){
   var params = new URLSearchParams(location.search);
-  var role = params.get('role') || 'back';
-  var labels = { back:'Lower-Back Sensor', thigh:'Thigh Sensor' };
+  var role = params.get('role') || 'pelvis';
+  var labels = { head:'Head Sensor', pelvis:'Pelvis Sensor', thigh:'Thigh Sensor' };
   document.getElementById('roleLabel').textContent = role.toUpperCase();
   document.getElementById('title').textContent = labels[role] || 'Sensor';
 
