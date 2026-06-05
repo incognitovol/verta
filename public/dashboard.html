@@ -135,6 +135,7 @@
         <button class="btn btn-ghost" id="flipPelvis">Flip Pelvis</button>
         <button class="btn btn-ghost" id="flipHead">Flip Head</button>
         <button class="btn btn-ghost" id="flipThigh">Flip Thigh</button>
+        <button class="btn btn-ghost" id="toggleLabels">Labels</button>
       </div>
     </div>
   </div>
@@ -324,6 +325,7 @@
   $('flipPelvis').addEventListener('click',function(){invP*=-1;});
   $('flipHead').addEventListener('click',function(){invH*=-1;});
   $('flipThigh').addEventListener('click',function(){invT*=-1;});
+  $('toggleLabels').addEventListener('click',function(){ showLabels=!showLabels; this.style.opacity=showLabels?'1':'0.5'; });
   $('demoPill').addEventListener('click',function(){
     demo=!demo; this.classList.toggle('on',demo);
     if(demo){ calibrated=true; pB0=0;pG0=0;hB0=0;t0=0; }
@@ -380,6 +382,7 @@
 
   /* ================= 3D SKELETON ================= */
   var scene,camera,renderer,figure,trunkPivot,headPivot,thighR,thighL,shinR,shinL,armR,armL;
+  var spineSegs=[], NV=16, segLen=0.52/16, headGroup, overlays, showLabels=true;
   var sceneEl=$('scene'),W,H,az=0.6,autoRot=true,dragging=false,lastX=0;
 
   function bone(len,rad,mat){ var g=new THREE.CylinderGeometry(rad,rad,len,14); g.translate(0,-len/2,0); return new THREE.Mesh(g,mat); }
@@ -411,46 +414,97 @@
     var boneMat=new THREE.MeshStandardMaterial({color:0x16313a,emissive:0x0a3b30,emissiveIntensity:0.5,metalness:0.3,roughness:0.45});
     var jointMat=new THREE.MeshStandardMaterial({color:0x2fe0b0,emissive:0x1c8d70,emissiveIntensity:0.7,metalness:0.4,roughness:0.3});
     var headMat=new THREE.MeshStandardMaterial({color:0x2fe0b0,emissive:0x176b56,emissiveIntensity:0.6,metalness:0.4,roughness:0.35});
+    var vertMat=new THREE.MeshStandardMaterial({color:0xCFC9B0,emissive:0x2a2618,emissiveIntensity:0.2,metalness:0.1,roughness:0.6});
 
     figure=new THREE.Group(); scene.add(figure);
     var pelvisG=new THREE.Group(); figure.add(pelvisG);
     var hipBar=bone(0.26,0.045,boneMat); hipBar.rotation.z=Math.PI/2; hipBar.position.set(0.13,0,0); pelvisG.add(hipBar);
     pelvisG.add(joint(0.06,jointMat));
 
+    // ---- anatomical spine: a chain of vertebrae that curves with the data ----
     trunkPivot=new THREE.Group(); pelvisG.add(trunkPivot);
-    var spineG=new THREE.CylinderGeometry(0.04,0.05,0.50,14); spineG.translate(0,0.25,0);
-    trunkPivot.add(new THREE.Mesh(spineG,boneMat));
-    var shoulders=new THREE.Group(); shoulders.position.y=0.50; trunkPivot.add(shoulders);
+    var parent=trunkPivot;
+    for(var i=0;i<NV;i++){
+      var seg=new THREE.Group();
+      seg.position.y=(i===0?0:segLen);
+      var t=i/(NV-1);
+      var rad=0.052-0.020*t;                 // lumbar wider, thoracic narrower
+      var vg=new THREE.CylinderGeometry(rad,rad,segLen*0.6,12); vg.translate(0,segLen*0.5,0);
+      seg.add(new THREE.Mesh(vg,vertMat));
+      var sp=new THREE.Mesh(new THREE.SphereGeometry(rad*0.5,8,8),vertMat); sp.position.set(0,segLen*0.5,-rad*1.1); // spinous process
+      seg.add(sp);
+      parent.add(seg); spineSegs.push(seg); parent=seg;
+    }
+    var top=new THREE.Group(); top.position.y=segLen; spineSegs[NV-1].add(top); // C7/neck base
+
+    // shoulders ride near the top of the spine
+    var shoulders=new THREE.Group(); shoulders.position.y=-segLen*1.2; top.add(shoulders);
     var shBar=new THREE.CylinderGeometry(0.04,0.04,0.34,14); shBar.rotateZ(Math.PI/2);
     shoulders.add(new THREE.Mesh(shBar,boneMat));
     shoulders.add(jointAt(jointMat,-0.17,0,0)); shoulders.add(jointAt(jointMat,0.17,0,0));
-    // head pivot (tilts independently from the head sensor)
-    headPivot=new THREE.Group(); headPivot.position.y=0.50; trunkPivot.add(headPivot);
-    var neck=new THREE.CylinderGeometry(0.028,0.028,0.09,10); neck.translate(0,0.045,0);
-    headPivot.add(new THREE.Mesh(neck,boneMat));
-    var headS=joint(0.10,headMat); headS.position.y=0.18; headPivot.add(headS);
     armR=limb(0.17,0,boneMat,jointMat,shoulders,0.25,0.23);
     armL=limb(-0.17,0,boneMat,jointMat,shoulders,0.25,0.23);
+
+    // head sits on top of the spine (carried forward by the spine curve = dODHA)
+    headGroup=new THREE.Group(); top.add(headGroup);
+    var neck=new THREE.CylinderGeometry(0.026,0.026,0.08,10); neck.translate(0,0.04,0);
+    headGroup.add(new THREE.Mesh(neck,boneMat));
+    var headS=joint(0.10,headMat); headS.position.y=0.17; headGroup.add(headS);
 
     var legR=limb(0.12,0,boneMat,jointMat,pelvisG,0.48,0.46); thighR=legR.upper; shinR=legR.lower;
     var legL=limb(-0.12,0,boneMat,jointMat,pelvisG,0.48,0.46); thighL=legL.upper; shinL=legL.lower;
     figure.position.y=0.30;
+
+    buildOverlays();
 
     sceneEl.addEventListener('pointerdown',function(e){dragging=true;lastX=e.clientX;autoRot=false;});
     window.addEventListener('pointerup',function(){dragging=false;});
     window.addEventListener('pointermove',function(e){ if(dragging){ az+=(e.clientX-lastX)*0.01; lastX=e.clientX; } });
     window.addEventListener('resize',onResize);
   }
+
+  function makeLabel(text){
+    var c=document.createElement('canvas'); c.width=256; c.height=120;
+    var x=c.getContext('2d'); x.font='bold 70px Arial'; x.fillStyle='#ffd24a';
+    x.textAlign='center'; x.textBaseline='middle';
+    x.shadowColor='rgba(0,0,0,.6)'; x.shadowBlur=8; x.fillText(text,128,60);
+    var tex=new THREE.CanvasTexture(c);
+    var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));
+    sp.scale.set(0.42,0.20,1); return sp;
+  }
+  function buildOverlays(){
+    overlays=new THREE.Group(); figure.add(overlays);
+    var Y=0xffd24a;
+    // dPT — horizontal double arrow at the pelvis
+    overlays.add(new THREE.ArrowHelper(new THREE.Vector3(0,0,1),new THREE.Vector3(0,0,0),0.34,Y,0.09,0.06));
+    overlays.add(new THREE.ArrowHelper(new THREE.Vector3(0,0,-1),new THREE.Vector3(0,0,0),0.26,Y,0.09,0.06));
+    var lDPT=makeLabel('dPT'); lDPT.position.set(0,0.05,-0.34); overlays.add(lDPT);
+    // dODHA — long arrow from hip up past the head, angled slightly forward
+    overlays.add(new THREE.ArrowHelper(new THREE.Vector3(0,0.96,0.28).normalize(),new THREE.Vector3(0,0,0),1.0,Y,0.1,0.07));
+    var lODHA=makeLabel('dODHA'); lODHA.position.set(0.12,0.85,0.34); overlays.add(lODHA);
+    // SL — horizontal arrow along the walking direction at foot level
+    overlays.add(new THREE.ArrowHelper(new THREE.Vector3(0,0,1),new THREE.Vector3(0,-0.92,-0.18),0.4,Y,0.09,0.06));
+    var lSL=makeLabel('SL'); lSL.position.set(0,-0.82,0.06); overlays.add(lSL);
+  }
+
   function onResize(){ if(!renderer)return; W=sceneEl.clientWidth;H=sceneEl.clientHeight; camera.aspect=W/H; camera.updateProjectionMatrix(); renderer.setSize(W,H); }
 
   var phase=0, legSmooth=0;
   function updateFigure(){
     if(!figure) return;
+    // whole trunk leans with pelvic tilt
     var rDPT=THREE.MathUtils.degToRad(Math.max(-45,Math.min(45,dPT)));
     trunkPivot.rotation.x=-rDPT;
-    // head tilts forward RELATIVE to trunk by (dODHA - dPT)
-    var headRel=THREE.MathUtils.degToRad(Math.max(-45,Math.min(45,dODHA-dPT)));
-    headPivot.rotation.x=-headRel;
+    // distribute the head-forward-beyond-pelvis angle as a curve along the upper spine
+    var relFwd=Math.max(-45,Math.min(45,dODHA-dPT));
+    var upperStart=Math.floor(NV*0.4), upperCount=NV-upperStart;
+    for(var i=0;i<NV;i++){
+      var t=i/(NV-1);
+      var base=Math.sin(t*Math.PI*2)*1.1;            // gentle S-curve, nets to ~vertical
+      var dyn=(i>=upperStart)?(relFwd/upperCount):0; // forward hunch grows toward the top
+      spineSegs[i].rotation.x=THREE.MathUtils.degToRad(base+dyn)*-1;
+    }
+    if(overlays) overlays.visible=showLabels;
 
     var rightAng,leftAng;
     if(thigh.present && !demo && calibrated){
@@ -461,7 +515,6 @@
       rightAng=Math.sin(phase)*0.45; leftAng=-Math.sin(phase)*0.45;
     }
     thighR.rotation.x=rightAng; thighL.rotation.x=leftAng;
-    // knee folds BACKWARD only (real knees can't hyperextend forward); bends more on the forward-swinging leg, stays near-straight on the planted leg
     shinR.rotation.x=-(0.12 + Math.max(0,rightAng)*0.85);
     shinL.rotation.x=-(0.12 + Math.max(0,leftAng)*0.85);
     if(armR&&armL){ armR.upper.rotation.x=-rightAng*0.45; armL.upper.rotation.x=-leftAng*0.45; }
