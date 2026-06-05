@@ -17,13 +17,10 @@
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
   html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;}
-  body{
-    min-height:100vh;
-    background:
+  body{min-height:100vh;background:
       radial-gradient(1200px 600px at 50% -10%,rgba(47,224,176,.06),transparent 60%),
       radial-gradient(800px 500px at 95% 110%,rgba(70,166,255,.05),transparent 60%),var(--bg);
-    padding:18px 18px 48px;max-width:1180px;margin:0 auto;
-  }
+    padding:18px 18px 48px;max-width:1180px;margin:0 auto;}
   .mono{font-family:'IBM Plex Mono',monospace;}
   header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap;}
   .brand{display:flex;align-items:center;gap:13px;}
@@ -39,7 +36,6 @@
   .pill.btn{cursor:pointer;color:var(--text);}
   .pill.btn:hover{border-color:var(--accent-dim);}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-
   .layout{display:grid;grid-template-columns:1.15fr 1fr;gap:16px;}
   @media(max-width:880px){.layout{grid-template-columns:1fr;}}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;}
@@ -47,65 +43,60 @@
   .card-title{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:9px;justify-content:space-between;}
   .card-title .lhs{display:flex;align-items:center;gap:9px;}
   .card-title .lhs::before{content:"";width:15px;height:1px;background:var(--accent);}
-
-  /* 3D */
-  #scene{width:100%;height:420px;border-radius:12px;background:linear-gradient(180deg,#0c141c,#0a0f14);border:1px solid var(--line-soft);overflow:hidden;position:relative;}
+  #scene{width:100%;height:430px;border-radius:12px;background:linear-gradient(180deg,#0c141c,#0a0f14);border:1px solid var(--line-soft);overflow:hidden;position:relative;}
   #scene canvas{display:block;}
   .scene-tag{position:absolute;bottom:10px;left:12px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted-2);letter-spacing:.08em;}
   .scene-hint{position:absolute;top:10px;right:12px;font-size:10px;color:var(--muted-2);letter-spacing:.06em;}
-
   .controls{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
-  .btn{font-family:inherit;font-weight:600;font-size:13.5px;border:none;border-radius:11px;padding:13px 18px;cursor:pointer;transition:.15s;flex:1;min-width:130px;}
+  .btn{font-family:inherit;font-weight:600;font-size:13.5px;border:none;border-radius:11px;padding:13px 18px;cursor:pointer;transition:.15s;flex:1;min-width:120px;}
   .btn-primary{background:var(--accent);color:#04130d;box-shadow:var(--glow);}
   .btn-primary:active{transform:scale(.98);}
   .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line);}
   .btn-ghost:active{background:var(--panel-2);}
-
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  .stat{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:12px;padding:14px 15px;}
-  .stat .k{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;}
-  .stat .v{font-family:'IBM Plex Mono',monospace;font-size:32px;font-weight:600;line-height:1.05;margin-top:9px;}
-  .stat .u{font-size:13px;color:var(--muted);font-weight:400;}
-  .stat .src{font-size:9px;color:var(--muted-2);letter-spacing:.08em;}
-
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;}
+  @media(max-width:520px){.grid{grid-template-columns:1fr 1fr;}}
+  .stat{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:12px;padding:13px 13px;}
+  .stat.key{border-color:#244a3e;background:linear-gradient(160deg,rgba(47,224,176,.05),var(--panel-2));}
+  .stat .k{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:4px;}
+  .stat .v{font-family:'IBM Plex Mono',monospace;font-size:27px;font-weight:600;line-height:1.05;margin-top:8px;}
+  .stat .u{font-size:12px;color:var(--muted);font-weight:400;}
+  .stat .src{font-size:8.5px;color:var(--muted-2);letter-spacing:.06em;}
+  .keytag{font-size:9px;color:var(--accent);letter-spacing:.08em;}
+  .heightrow{display:flex;align-items:center;gap:8px;margin-top:13px;font-size:11.5px;color:var(--muted);}
+  .heightrow input{width:64px;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:7px 9px;font-family:'IBM Plex Mono',monospace;font-size:13px;}
   #walkLive{display:none;align-items:center;justify-content:space-between;background:var(--panel-2);border:1px solid var(--accent-dim);border-radius:12px;padding:14px 17px;margin-top:14px;}
   #walkLive .t{font-family:'IBM Plex Mono',monospace;font-size:28px;color:var(--accent);}
   #walkLive .x{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);}
   .rec{width:9px;height:9px;border-radius:50%;background:var(--danger);display:inline-block;margin-right:8px;animation:pulse 1.2s infinite;vertical-align:middle;}
-
   #summary{display:none;}
   .sumgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
   .sumcell{text-align:center;padding:9px 4px;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;}
-  .sumcell .k{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
-  .sumcell .v{font-family:'IBM Plex Mono',monospace;font-size:23px;font-weight:600;margin-top:6px;}
+  .sumcell .k{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  .sumcell .v{font-family:'IBM Plex Mono',monospace;font-size:21px;font-weight:600;margin-top:6px;}
   .sumcell .d{font-size:11px;font-family:'IBM Plex Mono',monospace;margin-top:4px;height:14px;}
   .up{color:var(--danger);}.down{color:var(--good);}.flat{color:var(--muted);}
   .baseline-tag{font-size:11.5px;color:var(--blue);border:1px solid #244a6e;background:rgba(70,166,255,.07);border-radius:8px;padding:10px 13px;margin-top:13px;line-height:1.55;}
   .baseline-tag b{color:var(--text);}
-
   footer{margin-top:24px;font-size:10.5px;color:var(--muted-2);line-height:1.65;text-align:center;}
   footer b{color:var(--muted);}
-
-  /* QR overlay */
-  .overlay{position:fixed;inset:0;background:rgba(6,10,14,.86);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
+  .overlay{position:fixed;inset:0;background:rgba(6,10,14,.86);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;overflow:auto;}
   .overlay.show{display:flex;}
-  .qrbox{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;max-width:620px;width:100%;}
+  .qrbox{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;max-width:760px;width:100%;}
   .qrbox h2{font-size:16px;margin-bottom:6px;}
   .qrbox p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:18px;}
-  .qrs{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-  @media(max-width:560px){.qrs{grid-template-columns:1fr;}}
-  .qr{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:12px;padding:16px;text-align:center;}
-  .qr .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
-  .qr img{width:170px;height:170px;border-radius:8px;background:#fff;padding:8px;}
-  .qr .url{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted-2);margin-top:11px;word-break:break-all;line-height:1.4;}
-  .qr .st{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;margin-top:10px;color:var(--muted);}
+  .qrs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  @media(max-width:640px){.qrs{grid-template-columns:1fr;}}
+  .qr{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:12px;padding:14px;text-align:center;}
+  .qr .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+  .qr img{width:150px;height:150px;border-radius:8px;background:#fff;padding:7px;}
+  .qr .pl{font-size:11px;color:var(--muted);margin-top:9px;line-height:1.4;}
+  .qr .st{font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-top:8px;color:var(--muted);}
   .qr.connected{border-color:var(--accent-dim);}
   .qr.connected .st{color:var(--accent);}
   .closeRow{margin-top:18px;text-align:right;}
 </style>
 </head>
 <body>
-
 <header>
   <div class="brand">
     <div class="logo">
@@ -117,7 +108,8 @@
     <div><h1>VERTA</h1><div class="sub">Spine Recovery Monitor</div></div>
   </div>
   <div class="pills">
-    <div class="pill" id="pBack"><span class="dot"></span>Back</div>
+    <div class="pill" id="pHead"><span class="dot"></span>Head</div>
+    <div class="pill" id="pPelvis"><span class="dot"></span>Pelvis</div>
     <div class="pill" id="pThigh"><span class="dot"></span>Thigh</div>
     <div class="pill btn" id="connectPill">Connect Phones</div>
     <div class="pill btn" id="demoPill">Demo</div>
@@ -125,7 +117,6 @@
 </header>
 
 <div class="layout">
-  <!-- LEFT: 3D skeleton -->
   <div>
     <div class="card">
       <div class="card-title"><span class="lhs">Live Skeleton</span><span class="mono" style="color:var(--muted-2);font-size:10px;">SENSOR-DRIVEN</span></div>
@@ -135,24 +126,25 @@
       </div>
       <div class="controls">
         <button class="btn btn-primary" id="calBtn">Set Upright (Calibrate)</button>
-        <button class="btn btn-ghost" id="flipTrunk">Flip Trunk</button>
+        <button class="btn btn-ghost" id="flipPelvis">Flip Pelvis</button>
+        <button class="btn btn-ghost" id="flipHead">Flip Head</button>
         <button class="btn btn-ghost" id="flipThigh">Flip Thigh</button>
       </div>
     </div>
   </div>
 
-  <!-- RIGHT: metrics -->
   <div>
     <div class="card">
-      <div class="card-title"><span class="lhs">Posture &amp; Gait · Live</span></div>
+      <div class="card-title"><span class="lhs">Key Parameters · Live</span><span class="keytag">VALIDATED ×3</span></div>
       <div class="grid">
-        <div class="stat"><div class="k"><span>Forward Lean</span><span class="src">BACK</span></div><div class="v" id="vFwd">0<span class="u">°</span></div></div>
-        <div class="stat"><div class="k"><span>Side Lean</span><span class="src">BACK</span></div><div class="v" id="vLat">0<span class="u">°</span></div></div>
-        <div class="stat"><div class="k"><span>Cadence</span><span class="src">BACK</span></div><div class="v" id="vCad">0<span class="u"> spm</span></div></div>
-        <div class="stat"><div class="k"><span>Steps</span><span class="src">BACK</span></div><div class="v" id="vStep">0</div></div>
-        <div class="stat"><div class="k"><span>Gait Symmetry</span><span class="src">BACK</span></div><div class="v" id="vSym">—<span class="u">%</span></div></div>
-        <div class="stat"><div class="k"><span>Hip Swing Range</span><span class="src">THIGH</span></div><div class="v" id="vSwing">0<span class="u">°</span></div></div>
+        <div class="stat key"><div class="k"><span>Pelvic Tilt</span><span class="src">dPT · PELVIS</span></div><div class="v" id="vDPT">0<span class="u">°</span></div></div>
+        <div class="stat key"><div class="k"><span>Head Forward</span><span class="src">dODHA · HEAD</span></div><div class="v" id="vDODHA">0<span class="u">°</span></div></div>
+        <div class="stat key"><div class="k"><span>Step Length</span><span class="src">SL · THIGH</span></div><div class="v" id="vSL">0<span class="u"> cm</span></div></div>
+        <div class="stat"><div class="k"><span>Cadence</span><span class="src">PELVIS</span></div><div class="v" id="vCad">0<span class="u"> spm</span></div></div>
+        <div class="stat"><div class="k"><span>Symmetry</span><span class="src">PELVIS</span></div><div class="v" id="vSym">—<span class="u">%</span></div></div>
+        <div class="stat"><div class="k"><span>Steps</span><span class="src">PELVIS</span></div><div class="v" id="vStep">0</div></div>
       </div>
+      <div class="heightrow">Patient height <input id="heightInp" type="number" value="170" min="120" max="210"> cm <span style="color:var(--muted-2)">(used to estimate step length)</span></div>
     </div>
 
     <div class="card">
@@ -164,15 +156,14 @@
       <div class="controls">
         <button class="btn btn-primary" id="walkBtn">Start Walk Test</button>
       </div>
-
       <div id="summary">
         <div class="sumgrid" style="margin-top:14px;">
-          <div class="sumcell"><div class="k">Avg Lean</div><div class="v" id="sAvg">0°</div><div class="d" id="dAvg"></div></div>
-          <div class="sumcell"><div class="k">Max Lean</div><div class="v" id="sMax">0°</div><div class="d" id="dMax"></div></div>
-          <div class="sumcell"><div class="k">Steps</div><div class="v" id="sStep">0</div><div class="d"></div></div>
+          <div class="sumcell"><div class="k">Pelvic Tilt</div><div class="v" id="sDPT">0°</div><div class="d" id="dDPT"></div></div>
+          <div class="sumcell"><div class="k">Head Fwd</div><div class="v" id="sDODHA">0°</div><div class="d" id="dDODHA"></div></div>
+          <div class="sumcell"><div class="k">Step Length</div><div class="v" id="sSL">0</div><div class="d" id="dSL"></div></div>
           <div class="sumcell"><div class="k">Cadence</div><div class="v" id="sCad">0</div><div class="d" id="dCad"></div></div>
           <div class="sumcell"><div class="k">Symmetry</div><div class="v" id="sSym">0%</div><div class="d" id="dSym"></div></div>
-          <div class="sumcell"><div class="k">Swing</div><div class="v" id="sSwing">0°</div><div class="d" id="dSwing"></div></div>
+          <div class="sumcell"><div class="k">Duration</div><div class="v" id="sDur">0s</div><div class="d"></div></div>
         </div>
         <div class="baseline-tag" id="baseTag">No pre-op baseline yet. Run a walk test before surgery and save it — every walk after surgery then shows recovery against it.</div>
         <div class="controls"><button class="btn btn-ghost" id="saveBaseBtn">Save as Pre-Op Baseline</button></div>
@@ -182,27 +173,17 @@
 </div>
 
 <footer>
-  <b>Prototype.</b> Trunk angles, step timing, and thigh swing are real sensor data from the phones. The skeleton is a representative model driven by those signals, not full-body motion capture. Not a medical device — for demonstration and development only.
+  <b>Prototype.</b> Pelvic tilt, head-forward angle and step timing are real sensor data; step length is estimated from thigh swing and patient height. The skeleton is a representative model driven by these signals, not full-body motion capture. Not a medical device — for demonstration and development only.
 </footer>
 
-<!-- QR OVERLAY -->
 <div class="overlay" id="overlay">
   <div class="qrbox">
-    <h2>Connect the two phones</h2>
-    <p>On each phone, open the camera and scan its code (or type the link). Tap <b>Start Sensor</b> and Allow motion access. Strap phone 1 to the lower back, phone 2 to the front of the thigh.</p>
+    <h2>Connect the three sensors</h2>
+    <p>Scan each code with that phone's camera (or type the link). Tap <b>Start Sensor</b> and Allow motion. Mount each phone snug so it can't slide — direction can be flipped later on the dashboard.</p>
     <div class="qrs">
-      <div class="qr" id="qrBack">
-        <div class="lbl">① Lower Back</div>
-        <img id="qrBackImg" alt="QR back" />
-        <div class="url" id="qrBackUrl"></div>
-        <div class="st">Waiting…</div>
-      </div>
-      <div class="qr" id="qrThigh">
-        <div class="lbl">② Thigh</div>
-        <img id="qrThighImg" alt="QR thigh" />
-        <div class="url" id="qrThighUrl"></div>
-        <div class="st">Waiting…</div>
-      </div>
+      <div class="qr" id="qrHead"><div class="lbl">① Head</div><img id="qrHeadImg" alt="head"><div class="pl">Headband / cap, centered, top up</div><div class="st">Waiting…</div></div>
+      <div class="qr" id="qrPelvis"><div class="lbl">② Pelvis</div><img id="qrPelvisImg" alt="pelvis"><div class="pl">On the sacrum (tailbone), flat</div><div class="st">Waiting…</div></div>
+      <div class="qr" id="qrThigh"><div class="lbl">③ Thigh</div><img id="qrThighImg" alt="thigh"><div class="pl">Front of thigh, top up</div><div class="st">Waiting…</div></div>
     </div>
     <div class="closeRow"><button class="btn btn-ghost" id="closeOverlay" style="flex:none;display:inline-block;width:auto;">Done</button></div>
   </div>
@@ -212,44 +193,42 @@
 (function(){
   var $=function(id){return document.getElementById(id);};
 
-  /* ---------------- connection / QR ---------------- */
-  var origin = location.origin;
-  var backUrl = origin + '/sensor.html?role=back';
-  var thighUrl = origin + '/sensor.html?role=thigh';
-  function qr(u){ return 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=0&data=' + encodeURIComponent(u); }
-  $('qrBackImg').src = qr(backUrl);  $('qrBackUrl').textContent = backUrl;
-  $('qrThighImg').src = qr(thighUrl); $('qrThighUrl').textContent = thighUrl;
+  /* ---- connection / QR ---- */
+  var origin=location.origin;
+  var headUrl=origin+'/sensor.html?role=head';
+  var pelvisUrl=origin+'/sensor.html?role=pelvis';
+  var thighUrl=origin+'/sensor.html?role=thigh';
+  function qr(u){return 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=0&data='+encodeURIComponent(u);}
+  $('qrHeadImg').src=qr(headUrl); $('qrPelvisImg').src=qr(pelvisUrl); $('qrThighImg').src=qr(thighUrl);
+  $('connectPill').addEventListener('click',function(){$('overlay').classList.add('show');});
+  $('closeOverlay').addEventListener('click',function(){$('overlay').classList.remove('show');});
 
-  $('connectPill').addEventListener('click', function(){ $('overlay').classList.add('show'); });
-  $('closeOverlay').addEventListener('click', function(){ $('overlay').classList.remove('show'); });
+  /* ---- state ---- */
+  var demo=false, invP=1, invH=1, invT=1;
+  var pB0=null,pG0=null,hB0=null,t0=null,calibrated=false;
+  var sm=0.18;
+  var head={betaS:0,last:0,present:false};
+  var pelvis={betaS:0,gammaS:0,last:0,present:false};
+  var thigh={betaS:0,last:0,present:false};
 
-  /* ---------------- state ---------------- */
-  var demo=false, invertTrunk=1, invertThigh=1;
-  var beta0=null, gamma0=null, thigh0=null, calibrated=false;
-  var smoothing=0.18;
+  var accBase=9.81,lastStepT=0,stepCount=0,stepTimes=[];
+  var cadence=0,symmetry=null;
+  var dPT=0, dODHA=0, thighAng=0, stepLen=0;
+  var swingMin=999,swingMax=-999,swingRange=0,swingResetT=0,maxDPT=0;
+  var heightCm=170;
+  $('heightInp').addEventListener('change',function(){ heightCm=Math.max(120,Math.min(210,+this.value||170)); });
 
-  var back = { betaS:0, gammaS:0, last:0, present:false };
-  var thigh = { betaS:0, last:0, present:false };
+  /* walk test */
+  var walking=false,wT0=0,wDPTsum=0,wN=0,wDPTmax=0,wDODHAmax=0,wStartSteps=0,wCadSum=0,wCadN=0,wSymSum=0,wSymN=0,wSLsum=0,wSLn=0;
+  var baseline=null,lastResult=null;
 
-  // gait
-  var accBase=9.81, lastStepT=0, stepCount=0, stepTimes=[];
-  var cadence=0, symmetry=null;
-  var fwd=0, lat=0, thighAng=0, swingRange=0, swingMin=999, swingMax=-999, swingResetT=0;
-
-  // walk test
-  var walking=false, walkStart=0, wSumFwd=0,wN=0,wMaxFwd=0,wStartSteps=0,wCadSum=0,wCadN=0,wSymSum=0,wSymN=0,wSwingMax=0;
-  var baseline=null, lastResult=null;
-
-  /* ---------------- websocket ---------------- */
+  /* ---- websocket ---- */
   var ws=null;
   function connect(){
-    var proto = location.protocol==='https:'?'wss://':'ws://';
+    var proto=location.protocol==='https:'?'wss://':'ws://';
     ws=new WebSocket(proto+location.host);
     ws.onopen=function(){ ws.send(JSON.stringify({type:'hello',role:'dashboard'})); };
-    ws.onmessage=function(ev){
-      var m; try{m=JSON.parse(ev.data);}catch(e){return;}
-      if(m.type==='data') onData(m);
-    };
+    ws.onmessage=function(ev){ var m; try{m=JSON.parse(ev.data);}catch(e){return;} if(m.type==='data') onData(m); };
     ws.onclose=function(){ setTimeout(connect,1500); };
     ws.onerror=function(){ try{ws.close();}catch(e){} };
   }
@@ -257,17 +236,17 @@
 
   function onData(m){
     var now=performance.now();
-    if(m.role==='back'){
-      back.betaS  = back.betaS*(1-smoothing)+m.beta*smoothing;
-      back.gammaS = back.gammaS*(1-smoothing)+m.gamma*smoothing;
-      back.last=now; back.present=true;
-      // step detection from back acceleration
+    if(m.role==='pelvis'){
+      pelvis.betaS=pelvis.betaS*(1-sm)+m.beta*sm;
+      pelvis.gammaS=pelvis.gammaS*(1-sm)+m.gamma*sm;
+      pelvis.last=now; pelvis.present=true;
       var mag=Math.sqrt(m.ax*m.ax+m.ay*m.ay+m.az*m.az);
       accBase=accBase*0.97+mag*0.03;
       if((mag-accBase)>1.25 && (now-lastStepT)>260){ registerStep(now); lastStepT=now; }
+    } else if(m.role==='head'){
+      head.betaS=head.betaS*(1-sm)+m.beta*sm; head.last=now; head.present=true;
     } else if(m.role==='thigh'){
-      thigh.betaS = thigh.betaS*(1-smoothing)+m.beta*smoothing;
-      thigh.last=now; thigh.present=true;
+      thigh.betaS=thigh.betaS*(1-sm)+m.beta*sm; thigh.last=now; thigh.present=true;
     }
   }
 
@@ -276,7 +255,6 @@
     if(stepTimes.length>14) stepTimes.shift();
     var cut=now-4000, recent=stepTimes.filter(function(t){return t>=cut;});
     cadence=Math.round(recent.length*15);
-    // symmetry: compare alternating (left/right) step intervals
     if(stepTimes.length>=6){
       var iv=[]; for(var i=1;i<stepTimes.length;i++) iv.push(stepTimes[i]-stepTimes[i-1]);
       var even=[],odd=[];
@@ -284,54 +262,51 @@
       var avg=function(a){return a.reduce(function(s,v){return s+v;},0)/a.length;};
       if(even.length&&odd.length){
         var e=avg(even),o=avg(odd);
-        var sym=100*(1-Math.abs(e-o)/((e+o)/2));
-        symmetry=Math.max(0,Math.min(100,Math.round(sym)));
+        symmetry=Math.max(0,Math.min(100,Math.round(100*(1-Math.abs(e-o)/((e+o)/2)))));
       }
     }
   }
 
-  /* ---------------- presence ---------------- */
+  /* ---- presence ---- */
   setInterval(function(){
     var now=performance.now();
-    back.present  = (now-back.last)<1500;
-    thigh.present = (now-thigh.last)<1500;
-    if(demo){ back.present=true; thigh.present=true; }
-    $('pBack').classList.toggle('on',back.present);
+    head.present=(now-head.last)<1500;
+    pelvis.present=(now-pelvis.last)<1500;
+    thigh.present=(now-thigh.last)<1500;
+    if(demo){ head.present=pelvis.present=thigh.present=true; }
+    $('pHead').classList.toggle('on',head.present);
+    $('pPelvis').classList.toggle('on',pelvis.present);
     $('pThigh').classList.toggle('on',thigh.present);
-    $('qrBack').classList.toggle('connected',back.present);
+    $('qrHead').classList.toggle('connected',head.present);
+    $('qrPelvis').classList.toggle('connected',pelvis.present);
     $('qrThigh').classList.toggle('connected',thigh.present);
-    $('qrBack').querySelector('.st').textContent = back.present?'Connected':'Waiting…';
-    $('qrThigh').querySelector('.st').textContent = thigh.present?'Connected':'Waiting…';
-    var tag=$('sceneTag');
-    if(demo) tag.textContent='demo mode';
-    else if(back.present||thigh.present) tag.textContent=(back.present?'back ✓ ':'back · ')+(thigh.present?'thigh ✓':'thigh ·');
-    else tag.textContent='awaiting sensors…';
-    if((back.present||thigh.present) && $('overlay').classList.contains('show') && back.present && thigh.present){
-      // auto close once both are in
-    }
+    $('qrHead').querySelector('.st').textContent=head.present?'Connected':'Waiting…';
+    $('qrPelvis').querySelector('.st').textContent=pelvis.present?'Connected':'Waiting…';
+    $('qrThigh').querySelector('.st').textContent=thigh.present?'Connected':'Waiting…';
+    var any=head.present||pelvis.present||thigh.present;
+    $('sceneTag').textContent= demo?'demo mode':(any?((head.present?'head ':'')+(pelvis.present?'pelvis ':'')+(thigh.present?'thigh':'')):'awaiting sensors…');
   },500);
 
-  /* ---------------- calibrate / flips / demo ---------------- */
+  /* ---- calibrate / flips / demo ---- */
   $('calBtn').addEventListener('click',function(){
-    beta0=back.betaS; gamma0=back.gammaS; thigh0=thigh.betaS; calibrated=true;
-    swingMin=999;swingMax=-999;
-    $('pBack');
-    this.textContent='Calibrated ✓'; var self=this;
-    setTimeout(function(){self.textContent='Set Upright (Calibrate)';},1400);
+    pB0=pelvis.betaS; pG0=pelvis.gammaS; hB0=head.betaS; t0=thigh.betaS; calibrated=true;
+    swingMin=999;swingMax=-999;maxDPT=0;
+    this.textContent='Calibrated'; var s=this; setTimeout(function(){s.textContent='Set Upright (Calibrate)';},1400);
   });
-  $('flipTrunk').addEventListener('click',function(){ invertTrunk*=-1; });
-  $('flipThigh').addEventListener('click',function(){ invertThigh*=-1; });
+  $('flipPelvis').addEventListener('click',function(){invP*=-1;});
+  $('flipHead').addEventListener('click',function(){invH*=-1;});
+  $('flipThigh').addEventListener('click',function(){invT*=-1;});
   $('demoPill').addEventListener('click',function(){
     demo=!demo; this.classList.toggle('on',demo);
-    if(demo){ calibrated=true; beta0=0;gamma0=0;thigh0=0; }
+    if(demo){ calibrated=true; pB0=0;pG0=0;hB0=0;t0=0; }
   });
 
-  /* ---------------- walk test ---------------- */
+  /* ---- walk test ---- */
   $('walkBtn').addEventListener('click',function(){
     if(!walking){
       if(!calibrated){ alert('Tap "Set Upright" first to zero the sensors.'); return; }
-      walking=true; walkStart=performance.now();
-      wSumFwd=0;wN=0;wMaxFwd=0;wStartSteps=stepCount;wCadSum=0;wCadN=0;wSymSum=0;wSymN=0;wSwingMax=0;
+      walking=true; wT0=performance.now();
+      wDPTsum=0;wN=0;wDPTmax=0;wDODHAmax=0;wStartSteps=stepCount;wCadSum=0;wCadN=0;wSymSum=0;wSymN=0;wSLsum=0;wSLn=0;
       this.textContent='Stop Walk Test'; this.style.background='var(--danger)'; this.style.color='#fff';
       $('walkLive').style.display='flex'; $('summary').style.display='none';
     } else {
@@ -339,33 +314,28 @@
       $('walkLive').style.display='none'; finishWalk();
     }
   });
-
   function finishWalk(){
-    var dur=(performance.now()-walkStart)/1000;
-    var r={
-      avgFwd: wN?wSumFwd/wN:0, maxFwd:wMaxFwd, steps:stepCount-wStartSteps,
-      cadence: wCadN?Math.round(wCadSum/wCadN):cadence,
-      symmetry: wSymN?Math.round(wSymSum/wSymN):(symmetry||0),
-      swing: wSwingMax, dur:dur
-    };
+    var dur=(performance.now()-wT0)/1000;
+    var r={ dPT:wN?wDPTsum/wN:0, dODHA:wDODHAmax, sl:wSLn?wSLsum/wSLn:stepLen,
+            steps:stepCount-wStartSteps, cadence:wCadN?Math.round(wCadSum/wCadN):cadence,
+            symmetry:wSymN?Math.round(wSymSum/wSymN):(symmetry||0), dur:dur };
     lastResult=r; showSummary(r);
   }
-
   function showSummary(r){
     $('summary').style.display='block';
-    $('sAvg').textContent=r.avgFwd.toFixed(1)+'°';
-    $('sMax').textContent=r.maxFwd.toFixed(1)+'°';
-    $('sStep').textContent=r.steps;
+    $('sDPT').textContent=r.dPT.toFixed(1)+'°';
+    $('sDODHA').textContent=r.dODHA.toFixed(1)+'°';
+    $('sSL').textContent=Math.round(r.sl);
     $('sCad').textContent=r.cadence;
     $('sSym').textContent=Math.round(r.symmetry)+'%';
-    $('sSwing').textContent=r.swing.toFixed(0)+'°';
+    $('sDur').textContent=r.dur.toFixed(0)+'s';
     if(baseline){
-      cmp('dAvg',r.avgFwd,baseline.avgFwd,true);
-      cmp('dMax',r.maxFwd,baseline.maxFwd,true);
+      cmp('dDPT',r.dPT,baseline.dPT,true);
+      cmp('dDODHA',r.dODHA,baseline.dODHA,true);
+      cmp('dSL',r.sl,baseline.sl,false);
       cmp('dCad',r.cadence,baseline.cadence,false);
       cmp('dSym',r.symmetry,baseline.symmetry,false);
-      cmp('dSwing',r.swing,baseline.swing,false);
-      $('baseTag').innerHTML='Compared to <b>pre-op baseline</b>. Lean ↓ is recovery (more upright); cadence, symmetry &amp; swing ↑ is recovery.';
+      $('baseTag').innerHTML='Compared to <b>pre-op baseline</b>. Pelvic tilt &amp; head-forward ↓ = recovery (more upright); step length, cadence &amp; symmetry ↑ = recovery.';
     }
   }
   function cmp(id,cur,base,lowerBetter){
@@ -376,21 +346,25 @@
   $('saveBaseBtn').addEventListener('click',function(){
     if(!lastResult) return;
     baseline=Object.assign({},lastResult);
-    $('baseTag').innerHTML='<b>Pre-op baseline saved.</b> Run another walk test (today or weeks from now) and the arrows above show recovery against it.';
-    this.textContent='Baseline Saved ✓'; var self=this;
-    setTimeout(function(){self.textContent='Save as Pre-Op Baseline';},1600);
+    $('baseTag').innerHTML='<b>Pre-op baseline saved.</b> Run another walk test (today or weeks from now) and the arrows show recovery against it.';
+    this.textContent='Baseline Saved'; var s=this; setTimeout(function(){s.textContent='Save as Pre-Op Baseline';},1600);
   });
 
   /* ================= 3D SKELETON ================= */
-  var scene,camera,renderer,figure,trunkPivot,thighR,thighL,shinR,shinL,armR,armL;
-  var sceneEl=$('scene'), W,H, az=0.6, autoRot=true, dragging=false, lastX=0;
+  var scene,camera,renderer,figure,trunkPivot,headPivot,thighR,thighL,shinR,shinL,armR,armL;
+  var sceneEl=$('scene'),W,H,az=0.6,autoRot=true,dragging=false,lastX=0;
 
-  function bone(len,rad,mat){
-    var g=new THREE.CylinderGeometry(rad,rad,len,14);
-    g.translate(0,-len/2,0); // grows downward from pivot
-    return new THREE.Mesh(g,mat);
-  }
+  function bone(len,rad,mat){ var g=new THREE.CylinderGeometry(rad,rad,len,14); g.translate(0,-len/2,0); return new THREE.Mesh(g,mat); }
   function joint(rad,mat){ return new THREE.Mesh(new THREE.SphereGeometry(rad,16,16),mat); }
+  function jointAt(mat,x,y,z){ var j=joint(0.05,mat); j.position.set(x,y,z); return j; }
+  function limb(x,y,boneMat,jointMat,parent,upLen,loLen){
+    var upper=new THREE.Group(); upper.position.set(x,y,0); parent.add(upper);
+    upper.add(joint(0.05,jointMat)); upper.add(bone(upLen,0.04,boneMat));
+    var lower=new THREE.Group(); lower.position.y=-upLen; upper.add(lower);
+    lower.add(joint(0.04,jointMat)); lower.add(bone(loLen,0.035,boneMat));
+    var tip=joint(0.035,jointMat); tip.position.y=-loLen; lower.add(tip);
+    return {upper:upper,lower:lower};
+  }
 
   function initThree(){
     W=sceneEl.clientWidth; H=sceneEl.clientHeight;
@@ -398,50 +372,40 @@
     camera=new THREE.PerspectiveCamera(42,W/H,0.1,100);
     renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-    renderer.setSize(W,H);
-    renderer.setClearColor(0x000000,0);
+    renderer.setSize(W,H); renderer.setClearColor(0x000000,0);
     sceneEl.appendChild(renderer.domElement);
-
     scene.add(new THREE.AmbientLight(0x4a6070,0.9));
     var d1=new THREE.DirectionalLight(0xffffff,0.9); d1.position.set(3,6,4); scene.add(d1);
     var p1=new THREE.PointLight(0x2fe0b0,0.7,20); p1.position.set(-3,3,3); scene.add(p1);
     var p2=new THREE.PointLight(0x46a6ff,0.5,20); p2.position.set(3,1,-3); scene.add(p2);
-
-    var grid=new THREE.GridHelper(6,18,0x21303d,0x16222e);
-    grid.position.y=-1.05; scene.add(grid);
+    var grid=new THREE.GridHelper(6,18,0x21303d,0x16222e); grid.position.y=-1.05; scene.add(grid);
 
     var boneMat=new THREE.MeshStandardMaterial({color:0x16313a,emissive:0x0a3b30,emissiveIntensity:0.5,metalness:0.3,roughness:0.45});
     var jointMat=new THREE.MeshStandardMaterial({color:0x2fe0b0,emissive:0x1c8d70,emissiveIntensity:0.7,metalness:0.4,roughness:0.3});
     var headMat=new THREE.MeshStandardMaterial({color:0x2fe0b0,emissive:0x176b56,emissiveIntensity:0.6,metalness:0.4,roughness:0.35});
 
     figure=new THREE.Group(); scene.add(figure);
+    var pelvisG=new THREE.Group(); figure.add(pelvisG);
+    var hipBar=bone(0.26,0.045,boneMat); hipBar.rotation.z=Math.PI/2; hipBar.position.set(0.13,0,0); pelvisG.add(hipBar);
+    pelvisG.add(joint(0.06,jointMat));
 
-    // pelvis (base, stays upright)
-    var pelvis=new THREE.Group(); pelvis.position.y=0; figure.add(pelvis);
-    var hipBar=bone(0.26,0.045,boneMat); hipBar.rotation.z=Math.PI/2; hipBar.position.set(0.13,0,0); pelvis.add(hipBar);
-    pelvis.add(joint(0.06,jointMat)); // hip center
-
-    // trunk pivot (leans). Torso is SHORTER than legs (realistic).
-    trunkPivot=new THREE.Group(); trunkPivot.position.set(0,0,0); pelvis.add(trunkPivot);
+    trunkPivot=new THREE.Group(); pelvisG.add(trunkPivot);
     var spineG=new THREE.CylinderGeometry(0.04,0.05,0.50,14); spineG.translate(0,0.25,0);
-    var spineMesh=new THREE.Mesh(spineG,boneMat); trunkPivot.add(spineMesh);
-    // shoulders (narrower)
+    trunkPivot.add(new THREE.Mesh(spineG,boneMat));
     var shoulders=new THREE.Group(); shoulders.position.y=0.50; trunkPivot.add(shoulders);
     var shBar=new THREE.CylinderGeometry(0.04,0.04,0.34,14); shBar.rotateZ(Math.PI/2);
     shoulders.add(new THREE.Mesh(shBar,boneMat));
     shoulders.add(jointAt(jointMat,-0.17,0,0)); shoulders.add(jointAt(jointMat,0.17,0,0));
-    // head (smaller)
+    // head pivot (tilts independently from the head sensor)
+    headPivot=new THREE.Group(); headPivot.position.y=0.50; trunkPivot.add(headPivot);
     var neck=new THREE.CylinderGeometry(0.028,0.028,0.09,10); neck.translate(0,0.045,0);
-    var neckM=new THREE.Mesh(neck,boneMat); neckM.position.y=0.50; trunkPivot.add(neckM);
-    var head=joint(0.10,headMat); head.position.y=0.68; trunkPivot.add(head);
-    // arms (shorter, hang to ~hip level)
+    headPivot.add(new THREE.Mesh(neck,boneMat));
+    var headS=joint(0.10,headMat); headS.position.y=0.18; headPivot.add(headS);
     armR=limb(0.17,0,boneMat,jointMat,shoulders,0.25,0.23);
     armL=limb(-0.17,0,boneMat,jointMat,shoulders,0.25,0.23);
 
-    // legs (children of pelvis -> independent of trunk lean). Longer than torso.
-    var legR=limb(0.12,0,boneMat,jointMat,pelvis,0.48,0.46); thighR=legR.upper; shinR=legR.lower;
-    var legL=limb(-0.12,0,boneMat,jointMat,pelvis,0.48,0.46); thighL=legL.upper; shinL=legL.lower;
-
+    var legR=limb(0.12,0,boneMat,jointMat,pelvisG,0.48,0.46); thighR=legR.upper; shinR=legR.lower;
+    var legL=limb(-0.12,0,boneMat,jointMat,pelvisG,0.48,0.46); thighL=legL.upper; shinL=legL.lower;
     figure.position.y=0.30;
 
     sceneEl.addEventListener('pointerdown',function(e){dragging=true;lastX=e.clientX;autoRot=false;});
@@ -449,132 +413,93 @@
     window.addEventListener('pointermove',function(e){ if(dragging){ az+=(e.clientX-lastX)*0.01; lastX=e.clientX; } });
     window.addEventListener('resize',onResize);
   }
-
-  function jointAt(mat,x,y,z){ var j=joint(0.05,mat); j.position.set(x,y,z); return j; }
-
-  // builds a 2-segment limb (upper+lower) hanging from a pivot at (x,y) on parent; returns {upper,lower}
-  function limb(x,y,boneMat,jointMat,parent,upLen,loLen){
-    var upper=new THREE.Group(); upper.position.set(x,y,0); parent.add(upper);
-    upper.add(joint(0.05,jointMat));
-    upper.add(bone(upLen,0.04,boneMat));
-    var lower=new THREE.Group(); lower.position.y=-upLen; upper.add(lower);
-    lower.add(joint(0.04,jointMat));
-    lower.add(bone(loLen,0.035,boneMat));
-    lower.add(footOrHand(jointMat,loLen));
-    return {upper:upper,lower:lower};
-  }
-  function footOrHand(mat,loLen){ var j=joint(0.035,mat); j.position.y=-loLen; return j; }
-
-  function onResize(){
-    if(!renderer) return;
-    W=sceneEl.clientWidth; H=sceneEl.clientHeight;
-    camera.aspect=W/H; camera.updateProjectionMatrix(); renderer.setSize(W,H);
-  }
+  function onResize(){ if(!renderer)return; W=sceneEl.clientWidth;H=sceneEl.clientHeight; camera.aspect=W/H; camera.updateProjectionMatrix(); renderer.setSize(W,H); }
 
   var phase=0, legSmooth=0;
   function updateFigure(){
     if(!figure) return;
-    // trunk lean: 1:1 with real angle (no exaggeration) — forward about X, side about Z
-    var rf=THREE.MathUtils.degToRad(Math.max(-50,Math.min(50,fwd)));
-    var rl=THREE.MathUtils.degToRad(Math.max(-40,Math.min(40,lat)));
-    trunkPivot.rotation.x = rf;
-    trunkPivot.rotation.z = -rl;
+    var rDPT=THREE.MathUtils.degToRad(Math.max(-45,Math.min(45,dPT)));
+    trunkPivot.rotation.x=-rDPT;
+    // head tilts forward RELATIVE to trunk by (dODHA - dPT)
+    var headRel=THREE.MathUtils.degToRad(Math.max(-45,Math.min(45,dODHA-dPT)));
+    headPivot.rotation.x=-headRel;
 
-    var rightAng, leftAng;
+    var rightAng,leftAng;
     if(thigh.present && !demo && calibrated){
-      // REAL leg drives everything → other leg + arms are locked anti-phase so they never drift
-      var target = THREE.MathUtils.degToRad(Math.max(-45,Math.min(45,thighAng)));
-      legSmooth += (target-legSmooth)*0.25;   // gentle low-pass to kill jitter
-      rightAng = legSmooth;
-      leftAng  = -legSmooth;                  // mirror of the real leg = always in step
+      var target=THREE.MathUtils.degToRad(Math.max(-45,Math.min(45,thighAng)));
+      legSmooth+=(target-legSmooth)*0.25; rightAng=legSmooth; leftAng=-legSmooth;
     } else {
-      // demo / no thigh sensor: model both legs from one walking clock
-      var spd=(cadence>0?cadence:(demo?104:0))/60;
-      phase += 0.016*spd*Math.PI;
-      rightAng = Math.sin(phase)*0.45;
-      leftAng  = -Math.sin(phase)*0.45;
+      var spd=(cadence>0?cadence:(demo?104:0))/60; phase+=0.016*spd*Math.PI;
+      rightAng=Math.sin(phase)*0.45; leftAng=-Math.sin(phase)*0.45;
     }
-
-    thighR.rotation.x = rightAng;
-    thighL.rotation.x = leftAng;
-    // knee bends as that leg swings forward
-    shinR.rotation.x = Math.max(0, rightAng*0.8 + 0.1);
-    shinL.rotation.x = Math.max(0, leftAng*0.8 + 0.1);
-    // arms swing opposite their same-side leg, smaller amplitude (less exaggerated)
-    if(armR&&armL){
-      armR.upper.rotation.x = -rightAng*0.45;
-      armL.upper.rotation.x = -leftAng*0.45;
-    }
+    thighR.rotation.x=rightAng; thighL.rotation.x=leftAng;
+    shinR.rotation.x=Math.max(0,rightAng*0.8+0.1);
+    shinL.rotation.x=Math.max(0,leftAng*0.8+0.1);
+    if(armR&&armL){ armR.upper.rotation.x=-rightAng*0.45; armL.upper.rotation.x=-leftAng*0.45; }
   }
 
-  /* ---------------- demo simulator ---------------- */
+  /* ---- demo ---- */
   var demoT=0;
   function simulate(){
     demoT+=0.016;
-    fwd = 12 + Math.sin(demoT*1.5)*2.2 + Math.sin(demoT*5)*1.0;
-    lat = Math.sin(demoT*2.3)*4.5;
-    thighAng = Math.sin(demoT*3.4)*30;
+    dPT=6+Math.sin(demoT*1.5)*2.0;
+    dODHA=12+Math.sin(demoT*1.5)*2.2+Math.sin(demoT*5)*1.0;
+    thighAng=Math.sin(demoT*3.4)*28;
     var now=performance.now();
     if(now-lastStepT>(60000/104)){ registerStep(now); lastStepT=now; }
-    swingRange=58+Math.sin(demoT)*4;
+    swingRange=52+Math.sin(demoT)*4;
   }
 
-  /* ---------------- main loop ---------------- */
+  /* ---- main loop ---- */
   function tick(){
     if(demo) simulate();
-
-    // compute calibrated angles
-    if(calibrated){
-      if(demo){
-        // fwd/lat/thighAng set by simulate()
-      } else {
-        if(beta0!=null){ fwd=(back.betaS-beta0)*invertTrunk; lat=(back.gammaS-gamma0)*invertTrunk; }
-        if(thigh0!=null){ thighAng=(thigh.betaS-thigh0)*invertThigh; }
-      }
+    if(calibrated && !demo){
+      if(pB0!=null) dPT=(pelvis.betaS-pB0)*invP;
+      if(hB0!=null) dODHA=(head.betaS-hB0)*invH;
+      if(t0!=null) thighAng=(thigh.betaS-t0)*invT;
     }
-
-    // swing range tracking (peak-to-peak of thigh over rolling reset)
+    // step length estimate from thigh swing peak-to-peak + height
     if(!demo){
       if(thighAng<swingMin) swingMin=thighAng;
       if(thighAng>swingMax) swingMax=thighAng;
       var now=performance.now();
-      if(now-swingResetT>2500){ if(swingMax>-998&&swingMin<998){ swingRange=swingMax-swingMin; } swingMin=999;swingMax=-999; swingResetT=now; }
+      if(now-swingResetT>2500){ if(swingMax>-998&&swingMin<998) swingRange=swingMax-swingMin; swingMin=999;swingMax=-999; swingResetT=now; }
     }
+    var legLen=0.53*(heightCm/100.0);
+    var halfSwing=THREE.MathUtils.degToRad(Math.max(0,swingRange))/2;
+    stepLen=Math.max(0, 2*legLen*Math.sin(halfSwing))*100; // cm
 
-    // max + walk accumulation
-    if(fwd>0 && fwd>(window._mx||0)) window._mx=fwd;
+    if(dPT>maxDPT) maxDPT=dPT;
     if(walking){
-      wSumFwd+=fwd; wN++;
-      if(fwd>wMaxFwd) wMaxFwd=fwd;
+      wDPTsum+=dPT; wN++;
+      if(dPT>wDPTmax) wDPTmax=dPT;
+      if(dODHA>wDODHAmax) wDODHAmax=dODHA;
       if(cadence>0){ wCadSum+=cadence; wCadN++; }
       if(symmetry!=null){ wSymSum+=symmetry; wSymN++; }
-      if(swingRange>wSwingMax) wSwingMax=swingRange;
-      $('walkTimer').textContent=((performance.now()-walkStart)/1000).toFixed(1)+'s';
+      if(stepLen>0){ wSLsum+=stepLen; wSLn++; }
+      $('walkTimer').textContent=((performance.now()-wT0)/1000).toFixed(1)+'s';
     }
 
-    // DOM readouts
-    $('vFwd').innerHTML=fwd.toFixed(0)+'<span class="u">°</span>';
-    $('vFwd').style.color=Math.abs(fwd)>15?'var(--warn)':'var(--text)';
-    $('vLat').innerHTML=lat.toFixed(0)+'<span class="u">°</span>';
+    $('vDPT').innerHTML=dPT.toFixed(0)+'<span class="u">°</span>';
+    $('vDODHA').innerHTML=dODHA.toFixed(0)+'<span class="u">°</span>';
+    $('vDODHA').style.color=dODHA>10?'var(--warn)':'var(--text)';
+    $('vSL').innerHTML=Math.round(stepLen)+'<span class="u"> cm</span>';
     $('vCad').innerHTML=cadence+'<span class="u"> spm</span>';
-    $('vStep').textContent=stepCount;
     $('vSym').innerHTML=(symmetry==null?'—':symmetry)+'<span class="u">%</span>';
-    $('vSwing').innerHTML=Math.max(0,swingRange).toFixed(0)+'<span class="u">°</span>';
+    $('vStep').textContent=stepCount;
 
-    // 3D
     if(renderer){
       updateFigure();
       if(autoRot) az+=0.0035;
-      var r=3.2;
-      camera.position.set(Math.sin(az)*r, 0.7, Math.cos(az)*r);
+      var r=3.3;
+      camera.position.set(Math.sin(az)*r,0.7,Math.cos(az)*r);
       camera.lookAt(0,0.35,0);
       renderer.render(scene,camera);
     }
     requestAnimationFrame(tick);
   }
 
-  // boot
-  try { initThree(); } catch(e){ console.error('3D init failed',e); $('sceneTag').textContent='3D unavailable'; }
+  try{ initThree(); }catch(e){ console.error('3D init failed',e); $('sceneTag').textContent='3D unavailable'; }
   requestAnimationFrame(tick);
 })();
 </script>
