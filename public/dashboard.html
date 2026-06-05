@@ -94,6 +94,11 @@
   .qr.connected{border-color:var(--accent-dim);}
   .qr.connected .st{color:var(--accent);}
   .closeRow{margin-top:18px;text-align:right;}
+  .infotbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+  .infotbl th{text-align:left;background:var(--panel-2);color:var(--text);font-weight:600;padding:9px 11px;border:1px solid var(--line);letter-spacing:.02em;}
+  .infotbl td{padding:9px 11px;border:1px solid var(--line-soft);color:var(--muted);}
+  .infotbl td:first-child{color:var(--text);}
+  .infotbl tr:nth-child(even) td{background:rgba(255,255,255,.015);}
 </style>
 </head>
 <body>
@@ -112,6 +117,7 @@
     <div class="pill" id="pPelvis"><span class="dot"></span>Pelvis</div>
     <div class="pill" id="pThigh"><span class="dot"></span>Thigh</div>
     <div class="pill btn" id="connectPill">Connect Phones</div>
+    <div class="pill btn" id="infoPill">How it works</div>
     <div class="pill btn" id="demoPill">Demo</div>
   </div>
 </header>
@@ -189,6 +195,26 @@
   </div>
 </div>
 
+<div class="overlay" id="infoOverlay">
+  <div class="qrbox" style="max-width:700px;">
+    <h2>How VERTA gets its numbers</h2>
+    <p>Each sensor has an accelerometer (senses which way is down) and a gyroscope (senses rotation). Fused together they give a clean tilt reading. <b>Set Upright</b> records that tilt as zero, so every value is the change from standing straight — which is why mounting angle doesn't matter, only that the sensor stays put.</p>
+    <table class="infotbl">
+      <thead><tr><th>Value</th><th>Source</th><th>How it is obtained</th></tr></thead>
+      <tbody>
+        <tr><td>Pelvic tilt (dPT)</td><td>Pelvis</td><td>Measured tilt, relative to upright</td></tr>
+        <tr><td>Head-forward (dODHA)</td><td>Head</td><td>Measured tilt, relative to upright</td></tr>
+        <tr><td>Cadence</td><td>Pelvis</td><td>Measured from step-impact timing</td></tr>
+        <tr><td>Step count</td><td>Pelvis</td><td>Measured from step-impact timing</td></tr>
+        <tr><td>Gait symmetry</td><td>Pelvis</td><td>Derived from left/right step timing</td></tr>
+        <tr><td>Step length</td><td>Thigh + height</td><td>Estimated (pendulum model)</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:11.5px;color:var(--muted-2);margin-top:14px;margin-bottom:0;">Angles and step timing are real sensor data; step length is the one estimate. The skeleton is a representative model, not full-body motion capture.</p>
+    <div class="closeRow"><button class="btn btn-ghost" id="closeInfo" style="flex:none;display:inline-block;width:auto;">Done</button></div>
+  </div>
+</div>
+
 <script>
 (function(){
   var $=function(id){return document.getElementById(id);};
@@ -202,6 +228,8 @@
   $('qrHeadImg').src=qr(headUrl); $('qrPelvisImg').src=qr(pelvisUrl); $('qrThighImg').src=qr(thighUrl);
   $('connectPill').addEventListener('click',function(){$('overlay').classList.add('show');});
   $('closeOverlay').addEventListener('click',function(){$('overlay').classList.remove('show');});
+  $('infoPill').addEventListener('click',function(){$('infoOverlay').classList.add('show');});
+  $('closeInfo').addEventListener('click',function(){$('infoOverlay').classList.remove('show');});
 
   /* ---- state ---- */
   var demo=false, invP=1, invH=1, invT=1;
