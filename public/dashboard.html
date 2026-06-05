@@ -433,8 +433,9 @@
       rightAng=Math.sin(phase)*0.45; leftAng=-Math.sin(phase)*0.45;
     }
     thighR.rotation.x=rightAng; thighL.rotation.x=leftAng;
-    shinR.rotation.x=Math.max(0,rightAng*0.8+0.1);
-    shinL.rotation.x=Math.max(0,leftAng*0.8+0.1);
+    // knee folds BACKWARD only (real knees can't hyperextend forward); bends more on the forward-swinging leg, stays near-straight on the planted leg
+    shinR.rotation.x=-(0.12 + Math.max(0,rightAng)*0.85);
+    shinL.rotation.x=-(0.12 + Math.max(0,leftAng)*0.85);
     if(armR&&armL){ armR.upper.rotation.x=-rightAng*0.45; armL.upper.rotation.x=-leftAng*0.45; }
   }
 
