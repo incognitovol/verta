@@ -414,7 +414,8 @@
 
     figure=new THREE.Group(); scene.add(figure);
     var pelvisG=new THREE.Group(); figure.add(pelvisG);
-    var hipBar=bone(0.26,0.045,boneMat); hipBar.rotation.z=Math.PI/2; hipBar.position.set(0.13,0,0); pelvisG.add(hipBar);
+    var hipG=new THREE.CylinderGeometry(0.045,0.045,0.26,14); hipG.rotateZ(Math.PI/2);
+    pelvisG.add(new THREE.Mesh(hipG,boneMat));
     pelvisG.add(joint(0.06,jointMat));
 
     trunkPivot=new THREE.Group(); pelvisG.add(trunkPivot);
